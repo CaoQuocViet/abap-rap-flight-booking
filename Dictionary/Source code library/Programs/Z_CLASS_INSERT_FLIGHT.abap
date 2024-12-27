@@ -1,4 +1,4 @@
-CLASS z_create_insert_flight DEFINITION
+CLASS z_class_insert_flight DEFINITION
   PUBLIC
   FINAL
   CREATE PUBLIC.
@@ -11,7 +11,7 @@ CLASS z_create_insert_flight DEFINITION
   PRIVATE SECTION.
 ENDCLASS.
 
-CLASS z_create_insert_flight IMPLEMENTATION.
+CLASS z_class_insert_flight IMPLEMENTATION.
 
     METHOD if_oo_adt_classrun~main.
       " Chạy phương thức insert_data khi bắt đầu thực thi
@@ -20,8 +20,8 @@ CLASS z_create_insert_flight IMPLEMENTATION.
 
     METHOD insert_data.
       " Declare a table to hold the data to be inserted
-      DATA lt_data TYPE TABLE OF zdemo_flight.
-      DATA ls_data TYPE zdemo_flight.
+      DATA lt_data TYPE TABLE OF zvietcq_flight.
+      DATA ls_data TYPE zvietcq_flight.
 
       " Insert first record into flight table
       ls_data-mandt = '100'. " Client value
@@ -91,26 +91,42 @@ CLASS z_create_insert_flight IMPLEMENTATION.
       DO 15 TIMES.
         CLEAR ls_data.
         ls_data-mandt = '100'.
-        ls_data-carrid = CASE sy-index
-                           WHEN 1 THEN 'AA'
-                           WHEN 2 THEN 'DL'
-                           WHEN 3 THEN 'UA'
-                           WHEN 4 THEN 'BA'
-                           WHEN 5 THEN 'LH'
-                           WHEN 6 THEN 'AF'
-                           WHEN 7 THEN 'KLM'
-                           WHEN 8 THEN 'CX'
-                           WHEN 9 THEN 'QF'
-                           WHEN 10 THEN 'SQ'
-                           WHEN 11 THEN 'NH'
-                           WHEN 12 THEN 'AC'
-                           WHEN 13 THEN 'JL'
-                           WHEN 14 THEN 'EI'
-                           WHEN 15 THEN 'TG'
-                         ENDCASE.
 
-        ls_data-connid = '10' + sy-index. " Connection ID
-        ls_data-fldate = '202401' && sy-index. " Flight Date (Year + Index as day)
+        " Assign carrier ID based on current iteration index
+        IF sy-index = 1.
+          ls_data-carrid = 'AA'.
+        ELSEIF sy-index = 2.
+          ls_data-carrid = 'DL'.
+        ELSEIF sy-index = 3.
+          ls_data-carrid = 'UA'.
+        ELSEIF sy-index = 4.
+          ls_data-carrid = 'BA'.
+        ELSEIF sy-index = 5.
+          ls_data-carrid = 'LH'.
+        ELSEIF sy-index = 6.
+          ls_data-carrid = 'AF'.
+        ELSEIF sy-index = 7.
+          ls_data-carrid = 'KLM'.
+        ELSEIF sy-index = 8.
+          ls_data-carrid = 'CX'.
+        ELSEIF sy-index = 9.
+          ls_data-carrid = 'QF'.
+        ELSEIF sy-index = 10.
+          ls_data-carrid = 'SQ'.
+        ELSEIF sy-index = 11.
+          ls_data-carrid = 'NH'.
+        ELSEIF sy-index = 12.
+          ls_data-carrid = 'AC'.
+        ELSEIF sy-index = 13.
+          ls_data-carrid = 'JL'.
+        ELSEIF sy-index = 14.
+          ls_data-carrid = 'EI'.
+        ELSEIF sy-index = 15.
+          ls_data-carrid = 'TG'.
+        ENDIF.
+
+        ls_data-connid = |10{ sy-index }|. " Connection ID
+        ls_data-fldate = |202401{ sy-index }|. " Flight Date (YYYY + Index as day)
         ls_data-price = ( sy-index * 50 ) + 200. " Price (increased by 50 for each iteration)
         ls_data-currency = 'USD'. " Currency Code (assumed USD for simplicity)
         ls_data-planetype = 'A320'. " Plane Type
@@ -120,7 +136,7 @@ CLASS z_create_insert_flight IMPLEMENTATION.
       ENDDO.
 
       " Insert all the data into the table
-      INSERT zdemo_flight FROM TABLE lt_data.
+      INSERT zvietcq_flight FROM TABLE @lt_data.
 
     ENDMETHOD.
 
